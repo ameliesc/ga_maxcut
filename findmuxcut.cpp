@@ -329,7 +329,7 @@ namespace ga {
       replace(children);
       // // LOG
       if (it % 10000 == 0){
-	cout << "|";
+	cout << ".";
       }
 	
       //   cout << "ITERATION:" << it << endl;
@@ -374,7 +374,6 @@ int main(int argc, char* argv[])
   outputFile << "Maxit " << 100000 << endl;
   vector<float> best_fit;
   best_fit.reserve(3);
-  cout << "Progress:" << endl;
   for (int i=0; i < 30; ++i){
       find_maxcut.readinput("unweighted_50.txt");
       //find_maxcut.solve(20,0,0.016f,0.5f, 0.5f);
@@ -382,7 +381,6 @@ int main(int argc, char* argv[])
       run_fit = find_maxcut.solve(pop_size,  crossover_method,  mut_prob, crossover_prob,  converge_mut_prob);
       outputFile << "Iteration " << i << " " << "fitness " << run_fit<< endl;
       best_fit.push_back(run_fit);
-      cout << "_";
   }
   int sum;
   for (auto& n : best_fit)
