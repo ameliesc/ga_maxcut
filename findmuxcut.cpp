@@ -282,15 +282,11 @@ namespace ga {
     int num_pertubate = 0;
     
     pop_size = popu_size;
-    cout << "POPULATION_SIZE: " << pop_size << endl;
-    cout << "CROSSOVER_METHOD:" << crossover_method << endl;
-    cout << "MUTATION PROB" << mut_prob << endl;
-    cout << "COVERGED MUTATION PROB" << converge_mut_prob << endl;
     initialize_population(pop_size);
     int best = numeric_limits<int>::min();
     int worst = numeric_limits<int>::max();
 
-    for( int it = 0; it < 1000000; it++){
+    for( int it = 0; it < 100000; it++){
 
 
       compute_fitness(chromosomes_[0]);
@@ -331,22 +327,22 @@ namespace ga {
       }
       
       replace(children);
-      // LOG
-      if (it % 10000 == 0){
+      // // LOG
+      // if (it % 10000 == 0){
 	
-        cout << "ITERATION:" << it << endl;
-      	cout << "################################################" << endl;
-      	cout<< "fitness best:  " << chromosomes_[best_fit_i]->fitness << endl;
-	chromosomes_[worst_fit_i]->display();
-	cout<< "fitness worst:  " << chromosomes_[worst_fit_i]->fitness << endl;
-      	chromosomes_[best_fit_i]->display();
+      //   cout << "ITERATION:" << it << endl;
+      // 	cout << "################################################" << endl;
+      // 	cout<< "fitness best:  " << chromosomes_[best_fit_i]->fitness << endl;
+      // 	chromosomes_[worst_fit_i]->display();
+      // 	cout<< "fitness worst:  " << chromosomes_[worst_fit_i]->fitness << endl;
+      // 	chromosomes_[best_fit_i]->display();
 
-      	cout<< "fitness0:  " << chromosomes_[0]->fitness << endl;
-      	cout<< "fitness1:  " << chromosomes_[1]->fitness << endl;
-      	cout<< "fitness2:  " << chromosomes_[2]->fitness << endl;
-      	cout<< "fitness3:  " << chromosomes_[3]->fitness << endl;
-	cout << "################################################" << endl;
-      }
+      // 	cout<< "fitness0:  " << chromosomes_[0]->fitness << endl;
+      // 	cout<< "fitness1:  " << chromosomes_[1]->fitness << endl;
+      // 	cout<< "fitness2:  " << chromosomes_[2]->fitness << endl;
+      // 	cout<< "fitness3:  " << chromosomes_[3]->fitness << endl;
+      // 	cout << "################################################" << endl;
+      // }
     }
     return chromosomes_[best_fit_i]->fitness;
   }
@@ -373,8 +369,10 @@ int main(int argc, char* argv[])
   outputFile << "MUTATION PROB: " << mut_prob << endl;
   outputFile  << "COVERGED MUTATION PROB: " << converge_mut_prob << endl;
   outputFile << "CROSSOVER_PROB: " << crossover_prob << endl;
+  outputFile << "Maxit " << 100000 << endl;
   vector<float> best_fit;
   best_fit.reserve(3);
+  cout << "Progress:" << endl;
   for (int i=0; i < 30; ++i){
       find_maxcut.readinput("unweighted_50.txt");
       //find_maxcut.solve(20,0,0.016f,0.5f, 0.5f);
@@ -382,6 +380,7 @@ int main(int argc, char* argv[])
       run_fit = find_maxcut.solve(pop_size,  crossover_method,  mut_prob, crossover_prob,  converge_mut_prob);
       outputFile << "Iteration " << i << " " << "fitness " << run_fit<< endl;
       best_fit.push_back(run_fit);
+      cout << "|";
   }
   int sum;
   for (auto& n : best_fit)
@@ -390,6 +389,7 @@ int main(int argc, char* argv[])
   avg = sum/30.0;
   outputFile << "Average: " << avg;
   outputFile.close();
+
   
 
   return 0;
