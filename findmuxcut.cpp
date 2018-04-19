@@ -277,7 +277,7 @@ namespace ga {
   }
   
 
-  void FindMaxCut::solve(int popu_size, int crossover_method, float mut_prob,float crossover_prob, float converge_mut_prob){
+  float FindMaxCut::solve(int popu_size, int crossover_method, float mut_prob,float crossover_prob, float converge_mut_prob){
     int POP_SIZE = 20;
     int num_pertubate = 0;
     
@@ -348,17 +348,51 @@ namespace ga {
 	cout << "################################################" << endl;
       }
     }
+    return chromosomes_[best_fit_i]->fitness;
   }
 };
   
   
 
 
-int main()
+int main(int argc, char* argv[])
+
+  
 {
   ga::FindMaxCut find_maxcut;
   //int popu_size, int crossover_method, float mut_prob,float crossover_prob, float converge_mut_prob
-  find_maxcut.readinput("unweighted_50.txt");
-  find_maxcut.solve(20,0,0.016f,0.5f, 0.5f);
+  ofstream outputFile;
+  outputFile.open(argv[6]);
+  int pop_size = stoi(argv[1]);
+  int crossover_method =  stoi(argv[2]);
+  float mut_prob = stof(argv[3]);
+  float crossover_prob = stof(argv[4]);
+  float converge_mut_prob = stof(argv[5]);
+  outputFile << "popsize" << pop_size << endl;
+  outputFile << "CROSSOVER_METHOD:" << crossover_method << endl;
+  outputFile << "MUTATION PROB: " << mut_prob << endl;
+  outputFile  << "COVERGED MUTATION PROB: " << converge_mut_prob << endl;
+  outputFile << "CROSSOVER_PROB: " << crossover_prob << endl;
+  vector<float> best_fit;
+  best_fit.reserve(3);
+  for (int i=0; i < 30; ++i){
+      find_maxcut.readinput("unweighted_50.txt");
+      //find_maxcut.solve(20,0,0.016f,0.5f, 0.5f);
+      float run_fit;
+      run_fit = find_maxcut.solve(pop_size,  crossover_method,  mut_prob, crossover_prob,  converge_mut_prob);
+      outputFile << "Iteration " << i << " " << "fitness " << run_fit<< endl;
+      best_fit.push_back(run_fit);
+  }
+  int sum;
+  for (auto& n : best_fit)
+    sum += n;
+  float avg;
+  avg = sum/30.0;
+  outputFile << "Average: " << avg;
+  outputFile.close();
   
+
+  return 0;
 }
+
+ 
