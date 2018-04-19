@@ -92,7 +92,7 @@ namespace ga{
 
    vector<int> crossover_point(int crossover_mode, float crossover_prob);
    pair<shared_ptr<Chromosome>, shared_ptr<Chromosome>> mutation(pair<shared_ptr<Chromosome>, shared_ptr<Chromosome>> children, float mut_prob);
-   bool isConverge();
+   bool isConverge(float limit);
    void pertubate();
    // mutate
    //replace

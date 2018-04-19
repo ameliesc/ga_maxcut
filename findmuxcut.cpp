@@ -367,7 +367,7 @@ int main(int argc, char* argv[])
   float mut_prob = stof(argv[3]);
   float crossover_prob = stof(argv[4]);
   float converge_mut_prob = stof(argv[5]);
-  float limit = stof(argv[7])
+  float limit = stof(argv[7]);
   outputFile << "popsize" << pop_size << endl;
   outputFile << "CROSSOVER_METHOD:" << crossover_method << endl;
   outputFile << "MUTATION PROB: " << mut_prob << endl;
