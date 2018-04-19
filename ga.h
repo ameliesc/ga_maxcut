@@ -65,7 +65,7 @@ namespace ga{
  // public for now, for testing purposes
    
    void readinput(std::string inFile);
-   void solve();
+   void solve(int popu_size, int crossover_method, float mut_prob,float crossover_prob, float converge_mut_prob);
    // solve
    // write Result
 
@@ -85,11 +85,11 @@ namespace ga{
    void compute_fitness(shared_ptr<Chromosome> chromosome);
    pair<int, int> selection();
    void replace(pair<shared_ptr<Chromosome>, shared_ptr<Chromosome> > children);
-   pair<shared_ptr<Chromosome>, shared_ptr<Chromosome> > crossover(int crossover_mode);
+   pair<shared_ptr<Chromosome>, shared_ptr<Chromosome> > crossover(int crossover_mode, float crossover_prob);
    vector<int> uniform_crossover(float crossover_prob);
    vector<int> kpoint_crossover(int k);
 
-   vector<int> crossover_point(int crossover_mode);
+   vector<int> crossover_point(int crossover_mode, float crossover_prob);
    pair<shared_ptr<Chromosome>, shared_ptr<Chromosome>> mutation(pair<shared_ptr<Chromosome>, shared_ptr<Chromosome>> children, float mut_prob);
    bool isConverge();
    void pertubate();

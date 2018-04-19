@@ -123,7 +123,7 @@ namespace ga {
     return make_pair(index[0], index[1]);
   }
   
-  vector<int>  FindMaxCut::crossover_point(int crossover_mode){
+  vector<int>  FindMaxCut::crossover_point(int crossover_mode, float crossover_prob){
     vector<int>  crossover_point;
     int i,k;
     switch(crossover_mode){
@@ -131,7 +131,7 @@ namespace ga {
       crossover_point.reserve(1);
       crossover_point.push_back(rand() % (num_v_ - 1) + 1);
     case 1: // uniform crossover but nothing nothing
-	crossover_point = uniform_crossover(0.5f);// make vector contain 0 if parent 1 value, make vector = 1 if parent 2 value.
+	crossover_point = uniform_crossover(crossover_prob);// make vector contain 0 if parent 1 value, make vector = 1 if parent 2 value.
     case 2: // multi point cross over, don't know  how to implement
       k = 5;
       crossover_point = kpoint_crossover(k);
@@ -171,13 +171,13 @@ namespace ga {
     return which_parent;
   }
 
-  pair<shared_ptr<Chromosome>, shared_ptr<Chromosome> > FindMaxCut::crossover(int crossover_mode){
+  pair<shared_ptr<Chromosome>, shared_ptr<Chromosome> > FindMaxCut::crossover(int crossover_mode, float crossover_prob){
     pair <int, int> indexes = selection();
     int i = indexes.first;
     int j = indexes.second;
     shared_ptr<Chromosome> child1(new Chromosome(num_v_));
     shared_ptr<Chromosome> child2(new Chromosome(num_v_));
-    vector<int> c = crossover_point(crossover_mode);
+    vector<int> c = crossover_point(crossover_mode, crossover_prob);
     switch(crossover_mode){
     case 0: // one point crossover mode
       //int c = 2;
@@ -277,15 +277,15 @@ namespace ga {
   }
   
 
-  void FindMaxCut::solve(){
+  void FindMaxCut::solve(int popu_size, int crossover_method, float mut_prob,float crossover_prob, float converge_mut_prob){
     int POP_SIZE = 20;
     int num_pertubate = 0;
     
-    pop_size = POP_SIZE;
+    pop_size = popu_size;
     cout << "POPULATION_SIZE: " << pop_size << endl;
-    cout << "CROSSOVER_METHOD:" << 0 << endl;
-    cout << "MUTATION PROB" << 0.016 << endl;
-    cout << "COVERGED MUTATION PROB" << 0.04 << endl;
+    cout << "CROSSOVER_METHOD:" << crossover_method << endl;
+    cout << "MUTATION PROB" << mut_prob << endl;
+    cout << "COVERGED MUTATION PROB" << converge_mut_prob << endl;
     initialize_population(pop_size);
     int best = numeric_limits<int>::min();
     int worst = numeric_limits<int>::max();
@@ -312,14 +312,14 @@ namespace ga {
 	sum_fitness += chromosomes_[i]->fitness;
       }
       pair<shared_ptr<Chromosome>, shared_ptr<Chromosome> > children;
-      children = crossover(0);
+      children = crossover(crossover_method,crossover_prob);
       
       if (isConverge()) {
 	//break;
 	
 	//	cout << "CONVERGED" << endl;
 	//cout << "MUTATING higher rate" << endl;
-	children = mutation(children, 0.04f);
+	children = mutation(children, converge_mut_prob );
 	// cout << "At iteration" << it << " ";
 	// cout << "PERTUBATING.." << endl;
 	// pertubate();
@@ -327,7 +327,7 @@ namespace ga {
 	// cout << "DONE." << endl;
       }
       else{
-	children = mutation(children, 0.016f);
+	children = mutation(children, mut_prob);
       }
       
       replace(children);
@@ -357,8 +357,8 @@ namespace ga {
 int main()
 {
   ga::FindMaxCut find_maxcut;
-  
+  //int popu_size, int crossover_method, float mut_prob,float crossover_prob, float converge_mut_prob
   find_maxcut.readinput("unweighted_50.txt");
-  find_maxcut.solve();
+  find_maxcut.solve(20,0,0.016f,0.5f, 0.5f);
   
 }
