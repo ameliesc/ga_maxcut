@@ -65,7 +65,7 @@ namespace ga{
  // public for now, for testing purposes
    
    void readinput(std::string inFile);
-   float solve(int popu_size, int crossover_method, float mut_prob,float crossover_prob, float converge_mut_prob);
+   float solve(int popu_size, int crossover_method, float mut_prob,float crossover_prob, float converge_mut_prob, float limit);
    // solve
    // write Result
 

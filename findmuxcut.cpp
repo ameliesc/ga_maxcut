@@ -284,7 +284,7 @@ namespace ga {
     return elapsed_time.count();
   }
 
-  float FindMaxCut::solve(int popu_size, int crossover_method, float mut_prob,float crossover_prob, float converge_mut_prob){
+  float FindMaxCut::solve(int popu_size, int crossover_method, float mut_prob,float crossover_prob, float converge_mut_prob, float limit){
     int POP_SIZE = 20;
     int num_pertubate = 0;
     
@@ -382,7 +382,7 @@ int main(int argc, char* argv[])
     find_maxcut.readinput("unweighted_50.txt");
     //find_maxcut.solve(20,0,0.016f,0.5f, 0.5f, 0.2f);
     float run_fit;
-    run_fit = find_maxcut.solve(pop_size,  crossover_method,  mut_prob, crossover_prob,  converge_mut_prob);
+    run_fit = find_maxcut.solve(pop_size,  crossover_method,  mut_prob, crossover_prob,  converge_mut_prob, limit);
     outputFile << "Iteration " << i << " " << "fitness " << run_fit<< endl;
     best_fit.push_back(run_fit);
 
