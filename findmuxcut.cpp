@@ -273,7 +273,7 @@ namespace ga {
     for (int i =0; i < pop_size; ++i)
       if (chromosomes_[i]->fitness == chromosomes_[best_fit_i]->fitness)
 	++num_converged_solution;
-    return num_converged_solution >= pop_size * 0.2;
+    return num_converged_solution >= pop_size * 0.4;
   }
   
 
@@ -328,23 +328,21 @@ namespace ga {
       
       replace(children);
       // // LOG
-      if (it % 10000 == 0){
-	cout << ".";
-      }
-	
-      //   cout << "ITERATION:" << it << endl;
-      // 	cout << "################################################" << endl;
-      // 	cout<< "fitness best:  " << chromosomes_[best_fit_i]->fitness << endl;
-      // 	chromosomes_[worst_fit_i]->display();
-      // 	cout<< "fitness worst:  " << chromosomes_[worst_fit_i]->fitness << endl;
-      // 	chromosomes_[best_fit_i]->display();
+      if (it % 250000 == 0){
+      
+        cout << "ITERATION:" << it << endl;
+      	cout << "################################################" << endl;
+      	cout<< "fitness best:  " << chromosomes_[best_fit_i]->fitness << endl;
+      	chromosomes_[worst_fit_i]->display();
+      	cout<< "fitness worst:  " << chromosomes_[worst_fit_i]->fitness << endl;
+      	chromosomes_[best_fit_i]->display();
 
-      // 	cout<< "fitness0:  " << chromosomes_[0]->fitness << endl;
-      // 	cout<< "fitness1:  " << chromosomes_[1]->fitness << endl;
-      // 	cout<< "fitness2:  " << chromosomes_[2]->fitness << endl;
-      // 	cout<< "fitness3:  " << chromosomes_[3]->fitness << endl;
-      // 	cout << "################################################" << endl;
-      // }
+      	cout<< "fitness0:  " << chromosomes_[0]->fitness << endl;
+      	cout<< "fitness1:  " << chromosomes_[1]->fitness << endl;
+      	cout<< "fitness2:  " << chromosomes_[2]->fitness << endl;
+      	cout<< "fitness3:  " << chromosomes_[3]->fitness << endl;
+      	cout << "################################################" << endl;
+      }
     }
     return chromosomes_[best_fit_i]->fitness;
   }
@@ -375,7 +373,7 @@ int main(int argc, char* argv[])
   vector<float> best_fit;
   best_fit.reserve(3);
   for (int i=0; i < 30; ++i){
-    cout << "Iteration-" << i << endl;
+    cout << "Epoch: " << i << endl;
     find_maxcut.readinput("unweighted_50.txt");
     //find_maxcut.solve(20,0,0.016f,0.5f, 0.5f);
     float run_fit;
