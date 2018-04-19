@@ -236,25 +236,9 @@ namespace ga {
     return make_pair(child1,child2);
   }
 
-  // void FindMaxCut::pertubate() { /// ssame as mutation... 
-
-  //   int size = pop_size;
-  //   chromosomes_.clear();
-  //   chromosomes_.reserve(size);
+  void FindMaxCut::hybridreplace(pair<shared_ptr<Chromosome>, shared_ptr<Chromosome> > children){
     
-  //   for (int i = 0; i < size; ++i) {
-  //     shared_ptr<Chromosome> chromosome(new Chromosome(num_v_));
-  //     chromosome->index = i;
-      
-  //     for (int j = 0; j < num_v_; ++j) {
-  // 	chromosome->genes.push_back(rand() % 2);
-  //     }
-      
-  //     chromosomes_.push_back(chromosome);
-  //   }
-
-  // }
-  
+  }
   
 
   void FindMaxCut::replace(pair<shared_ptr<Chromosome>, shared_ptr<Chromosome> > children){
