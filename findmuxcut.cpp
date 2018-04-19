@@ -317,7 +317,7 @@ namespace ga {
       pair<shared_ptr<Chromosome>, shared_ptr<Chromosome> > children;
       children = crossover(crossover_method,crossover_prob);
       
-      if (isConverge()) {
+      if (isConverge(limit)) {
 	children = mutation(children, converge_mut_prob );
       }
       else{
