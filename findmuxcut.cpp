@@ -335,6 +335,7 @@ namespace ga {
       
       replace(children);
       double sec = getElapsedTime();
+      cout <<sec << endl;
       if (iteration % 100 == 0){
       
         cout << "ITERATION:" << iteration << endl;
@@ -350,10 +351,11 @@ namespace ga {
       	cout<< "fitness3:  " << chromosomes_[3]->fitness << endl;
       	cout << "################################################" << endl;
 	iteration++;
-	if (sec > 177.0) {
-	  return chromosomes_[best_fit_i]->fitness;
-	  break;
+
 	}
+      if (sec > 177.0) {
+	return chromosomes_[best_fit_i]->fitness;
+	break;
       }
     }
 
@@ -367,7 +369,7 @@ int main(int argc, char* argv[])
 
   
 {
-  ga::FindMaxCut find_maxcut;
+
   //int popu_size, int crossover_method, float mut_prob,float crossover_prob, float converge_mut_prob
   ofstream outputFile;
   outputFile.open(argv[6]);
@@ -384,7 +386,8 @@ int main(int argc, char* argv[])
   outputFile << "Maxit " << 100000 << endl;
   vector<float> best_fit;
   best_fit.reserve(3);
-  for (int i=0; i < 30; ++i){
+  for (int i=0; i < 5; ++i){
+    ga::FindMaxCut find_maxcut;
     cout << "Epoch: " << i << endl;
     find_maxcut.readinput("unweighted_50.txt");
     //find_maxcut.solve(20,0,0.016f,0.5f, 0.5f);
