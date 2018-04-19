@@ -286,7 +286,7 @@ namespace ga {
     int best = numeric_limits<int>::min();
     int worst = numeric_limits<int>::max();
 
-    for( int it = 0; it < 100000; it++){
+    for( int it = 0; it < 1000000; it++){
 
 
       compute_fitness(chromosomes_[0]);
@@ -375,12 +375,14 @@ int main(int argc, char* argv[])
   vector<float> best_fit;
   best_fit.reserve(3);
   for (int i=0; i < 30; ++i){
-      find_maxcut.readinput("unweighted_50.txt");
-      //find_maxcut.solve(20,0,0.016f,0.5f, 0.5f);
-      float run_fit;
-      run_fit = find_maxcut.solve(pop_size,  crossover_method,  mut_prob, crossover_prob,  converge_mut_prob);
-      outputFile << "Iteration " << i << " " << "fitness " << run_fit<< endl;
-      best_fit.push_back(run_fit);
+    cout << "Iteration-" << i << endl;
+    find_maxcut.readinput("unweighted_50.txt");
+    //find_maxcut.solve(20,0,0.016f,0.5f, 0.5f);
+    float run_fit;
+    run_fit = find_maxcut.solve(pop_size,  crossover_method,  mut_prob, crossover_prob,  converge_mut_prob);
+    outputFile << "Iteration " << i << " " << "fitness " << run_fit<< endl;
+    best_fit.push_back(run_fit);
+
   }
   int sum;
   for (auto& n : best_fit)
