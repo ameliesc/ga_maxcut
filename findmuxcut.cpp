@@ -335,8 +335,7 @@ namespace ga {
       
       replace(children);
       double sec = getElapsedTime();
-      cout <<sec << endl;
-      if (iteration % 100 == 0){
+      if (iteration % 10000 == 0){
       
         cout << "ITERATION:" << iteration << endl;
       	cout << "################################################" << endl;
@@ -350,9 +349,8 @@ namespace ga {
       	cout<< "fitness2:  " << chromosomes_[2]->fitness << endl;
       	cout<< "fitness3:  " << chromosomes_[3]->fitness << endl;
       	cout << "################################################" << endl;
-	iteration++;
-
 	}
+      iteration++;
       if (sec > 177.0) {
 	return chromosomes_[best_fit_i]->fitness;
 	break;
