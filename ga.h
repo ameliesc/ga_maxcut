@@ -80,6 +80,7 @@ namespace ga{
      //cout << "cutting_points" << chrom. 
    }
  private:
+   double getElapsedTime();
    // list all the GA functions used  - GA _ solver etc
    void initialize_population(int size);
    void compute_fitness(shared_ptr<Chromosome> chromosome);
@@ -105,10 +106,8 @@ namespace ga{
    int worst_fit_i;
    int second_worst_fit_i;
    int best_fit_i;
-   int num_k_crossover;
-   int crossover_mode;
+   chrono::time_point<chrono::system_clock> start_time_;
    vector<float> roulette_fitness;
-   int selection_pressure;
    vector<Edge> edges_;
    vector<Vertex> vertices_;
    vector<shared_ptr<Chromosome> > chromosomes_;

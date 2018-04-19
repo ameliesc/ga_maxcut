@@ -14,7 +14,10 @@ using namespace ga;
 
 namespace ga {
   FindMaxCut::FindMaxCut()
-    : iteration(0){  srand(time(0));}
+    : iteration(0),
+   start_time_(chrono::system_clock::now()){
+    srand(time(0));
+  }
     
  
 
@@ -273,9 +276,13 @@ namespace ga {
     for (int i =0; i < pop_size; ++i)
       if (chromosomes_[i]->fitness == chromosomes_[best_fit_i]->fitness)
 	++num_converged_solution;
-    return num_converged_solution >= pop_size * 0.4;
+    return num_converged_solution >= pop_size * 0.2;
   }
-  
+  double FindMaxCut::getElapsedTime() {
+    auto current_time = chrono::system_clock::now();
+    chrono::duration<double> elapsed_time = current_time - start_time_;
+    return elapsed_time.count();
+  }
 
   float FindMaxCut::solve(int popu_size, int crossover_method, float mut_prob,float crossover_prob, float converge_mut_prob){
     int POP_SIZE = 20;
@@ -285,8 +292,8 @@ namespace ga {
     initialize_population(pop_size);
     int best = numeric_limits<int>::min();
     int worst = numeric_limits<int>::max();
-
-    for( int it = 0; it < 1000000; it++){
+    int iteration = 0;
+    while (true){
 
 
       compute_fitness(chromosomes_[0]);
@@ -327,10 +334,10 @@ namespace ga {
       }
       
       replace(children);
-      // // LOG
-      if (it % 250000 == 0){
+      double sec = getElapsedTime();
+      if (iteration % 1000 == 0){
       
-        cout << "ITERATION:" << it << endl;
+        cout << "ITERATION:" << iteration << endl;
       	cout << "################################################" << endl;
       	cout<< "fitness best:  " << chromosomes_[best_fit_i]->fitness << endl;
       	chromosomes_[worst_fit_i]->display();
@@ -342,6 +349,10 @@ namespace ga {
       	cout<< "fitness2:  " << chromosomes_[2]->fitness << endl;
       	cout<< "fitness3:  " << chromosomes_[3]->fitness << endl;
       	cout << "################################################" << endl;
+	iteration++;
+	if (sec > 177.0) {
+	  break;
+	}
       }
     }
     return chromosomes_[best_fit_i]->fitness;
