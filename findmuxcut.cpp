@@ -276,7 +276,7 @@ namespace ga {
     for (int i =0; i < pop_size; ++i)
       if (chromosomes_[i]->fitness == chromosomes_[best_fit_i]->fitness)
 	++num_converged_solution;
-    return num_converged_solution >= pop_size * 0.2;
+    return num_converged_solution >= pop_size * 0.4;
   }
   double FindMaxCut::getElapsedTime() {
     auto current_time = chrono::system_clock::now();
@@ -318,16 +318,7 @@ namespace ga {
       children = crossover(crossover_method,crossover_prob);
       
       if (isConverge()) {
-	//break;
-	
-	//	cout << "CONVERGED" << endl;
-	//cout << "MUTATING higher rate" << endl;
 	children = mutation(children, converge_mut_prob );
-	// cout << "At iteration" << it << " ";
-	// cout << "PERTUBATING.." << endl;
-	// pertubate();
-	// ++num_pertubate;
-	// cout << "DONE." << endl;
       }
       else{
 	children = mutation(children, mut_prob);
@@ -399,7 +390,7 @@ int main(int argc, char* argv[])
   for (auto& n : best_fit)
     sum += n;
   float avg;
-  avg = sum/30.0;
+  avg = sum/5;
   outputFile << "Average: " << avg;
   outputFile.close();
 
