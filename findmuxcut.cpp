@@ -328,7 +328,9 @@ namespace ga {
       
       replace(children);
       // // LOG
-      // if (it % 10000 == 0){
+      if (it % 10000 == 0){
+	cout << "|";
+      }
 	
       //   cout << "ITERATION:" << it << endl;
       // 	cout << "################################################" << endl;
@@ -380,7 +382,7 @@ int main(int argc, char* argv[])
       run_fit = find_maxcut.solve(pop_size,  crossover_method,  mut_prob, crossover_prob,  converge_mut_prob);
       outputFile << "Iteration " << i << " " << "fitness " << run_fit<< endl;
       best_fit.push_back(run_fit);
-      cout << "|";
+      cout << "_";
   }
   int sum;
   for (auto& n : best_fit)
