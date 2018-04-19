@@ -271,12 +271,12 @@ namespace ga {
     chromosomes_[second_worst_fit_i] = child2;
   }
 
-  bool FindMaxCut::isConverge() {
+  bool FindMaxCut::isConverge(float limit) {
     int num_converged_solution = 0;
     for (int i =0; i < pop_size; ++i)
       if (chromosomes_[i]->fitness == chromosomes_[best_fit_i]->fitness)
 	++num_converged_solution;
-    return num_converged_solution >= pop_size * 0.4;
+    return num_converged_solution >= pop_size * limit;
   }
   double FindMaxCut::getElapsedTime() {
     auto current_time = chrono::system_clock::now();
@@ -359,7 +359,7 @@ int main(int argc, char* argv[])
   
 {
 
-  //int popu_size, int crossover_method, float mut_prob,float crossover_prob, float converge_mut_prob
+  //int popu_size, int crossover_method, float mut_prob,float crossover_prob, float converge_mut_prob, converge_limit
   ofstream outputFile;
   outputFile.open(argv[6]);
   int pop_size = stoi(argv[1]);
@@ -367,19 +367,20 @@ int main(int argc, char* argv[])
   float mut_prob = stof(argv[3]);
   float crossover_prob = stof(argv[4]);
   float converge_mut_prob = stof(argv[5]);
+  float limit = stof(argv[7])
   outputFile << "popsize" << pop_size << endl;
   outputFile << "CROSSOVER_METHOD:" << crossover_method << endl;
   outputFile << "MUTATION PROB: " << mut_prob << endl;
   outputFile  << "COVERGED MUTATION PROB: " << converge_mut_prob << endl;
   outputFile << "CROSSOVER_PROB: " << crossover_prob << endl;
-  outputFile << "Maxit " << 100000 << endl;
+  outputFile << "CONVERGE_LIMIT: " << limit << endl;
   vector<float> best_fit;
   best_fit.reserve(3);
   for (int i=0; i < 5; ++i){
     ga::FindMaxCut find_maxcut;
     cout << "Epoch: " << i << endl;
     find_maxcut.readinput("unweighted_50.txt");
-    //find_maxcut.solve(20,0,0.016f,0.5f, 0.5f);
+    //find_maxcut.solve(20,0,0.016f,0.5f, 0.5f, 0.2f);
     float run_fit;
     run_fit = find_maxcut.solve(pop_size,  crossover_method,  mut_prob, crossover_prob,  converge_mut_prob);
     outputFile << "Iteration " << i << " " << "fitness " << run_fit<< endl;
