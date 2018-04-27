@@ -6,7 +6,9 @@
 #include <iostream>
 #include <set>
 #include <map>
-
+#include <memory>
+#include <ctime>
+#include <chrono>
 using namespace std;
 
 namespace ga{
@@ -59,7 +61,7 @@ namespace ga{
   private:
     double getElapsedTime();
     void initialize_population(int size);
-    void compute_fitness(shared_ptr <Chromosome>  chromosome );
+    void compute_fitness(shared_ptr<Chromosome> chromosome );
     void update_fitness();
     pair<int, int> selection();
     vector<int> crossover_point(int mode, float prob);
