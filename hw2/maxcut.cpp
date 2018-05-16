@@ -32,25 +32,24 @@ namespace ga {
             edges_.reserve(num_e_);
 	    vertices_.reserve(num_v_);
 
-	    for (int i = 0; i < num_v_; ++i){
+	    for (int i = 0; i < num_v_ + 1; i++){ // for somme reason size needs to be 101 otherwise segmentationfault
 	      Vertex vertex(i);
 	      vertices_.push_back(vertex);
 	    }
 	    
-
             int v1, v2, weight;
             while (getline(in_file, line, ' ')) {
-                v1 = stoi(line);
-                getline(in_file, line, ' ');
-                v2 = stoi(line);
-                getline(in_file, line, '\n');
-                weight = stoi(line);
+	      v1 = stoi(line);
+	      getline(in_file, line, ' ');
+	      v2 = stoi(line);
+	      getline(in_file, line, '\n');
+	      weight = stoi(line);
 
-                ga::Edge edge(v1, v2, weight);
-                edges_.emplace_back(edge);
-		
-		vertices_[v1].append(v2, weight);
-		vertices_[v2].append(v1, weight);
+              ga::Edge edge(v1, v2, weight);
+              edges_.emplace_back(edge);
+	      vertices_[v1].append(v2, weight);
+	      vertices_[v2].append(v1, weight);
+	      
 		
             }
 
@@ -62,14 +61,19 @@ namespace ga {
   void  FindMaxCut::localsearch(shared_ptr<Chromosome> chromosome){
     bool improved = true; // need to change this to random index generator somehow
     random_shuffle(random.begin(), random.end());
-    
+    double start;
+    start = getElapsedTime();
     while(improved){
       improved = false;
       for(int i = 0; i < num_v_; ++i){
 	int sum_weights = 0;
-	int vertex_index = i;
 	int num_neigh = vertices_[random[i]].neighbours.size();
 	  for(int j = 0; j < num_neigh; j++){
+	    //if (isConverge()) {
+	    //  for(auto &chromosome :chromosomes_){
+	    //	mutation(0.5,chromosome);
+	    //}
+	    //}
 	    int index_neigh = vertices_[random[i]].neighbours[j].first;
 	    int weight_neigh = vertices_[random[i]].neighbours[j].second;
 	    if (chromosome->genes[random[i]] == chromosome->genes[index_neigh]){
@@ -78,16 +82,24 @@ namespace ga {
 	    else {
 	      sum_weights -=weight_neigh;
 	    }
+	    double current;
+	    current = getElapsedTime();
+
+	    if (current - start >= 20.0){
+	      goto endofloop;
+	    }
+	    if (improved == false || getElapsedTime() >= 177.0){
+	     goto endofloop;
+	    }
+	  }
 	    if (sum_weights > 0) {
 	      chromosome->genes[random[i]] = 1 - chromosome->genes[random[i]];
 	      improved = true;
 
 	    }
 
-	    if (improved == false || getElapsedTime() >= 176.0){
-	      goto endofloop;
-	    }
-	  }
+
+	  
       }
     }
   endofloop:
@@ -171,7 +183,6 @@ namespace ga {
 
     pair<int, int>  FindMaxCut::selection(){ // for now only roulette wheel slection, returns single chromosome // CLEAR
     int r = 0;
-    int selected_index = 0;
     int best = chromosomes_[best_fit_i]->fitness;
     int worst = chromosomes_[worst_fit_i]->fitness;
     int selection_pressure = 3;
@@ -213,8 +224,8 @@ namespace ga {
   vector<int>  FindMaxCut::crossover_point(int crossover_mode, float crossover_prob){
     vector<int>  crossover_point;
     crossover_point.clear();
-    int i,k;
-    if (crossover_mode ==  0) { // on point crossover
+    int k;
+    if (crossover_mode ==  0) { // one point crossover
       crossover_point.reserve(1);
       crossover_point.push_back(rand() % (num_v_ - 1) + 1);
     }
@@ -222,7 +233,7 @@ namespace ga {
       crossover_point = uniform_crossover(crossover_prob);// make vector contain 0 if parent 1 value, make vector = 1 if parent 2 value.
     }
     else if (crossover_mode == 2){// multi point cross over, don't know  how to implement
-      k = 3;
+      k = 6;
       crossover_point = kpoint_crossover(k);
   }
     return crossover_point;
@@ -354,7 +365,7 @@ namespace ga {
     for (int i =0; i < pop_size; ++i)
       if (chromosomes_[i]->fitness == chromosomes_[best_fit_i]->fitness)
 	++num_converged_solution;
-    return num_converged_solution >= pop_size * 0.2;
+    return num_converged_solution >= pop_size * 0.5;
    }
 
   vector<int> FindMaxCut::uniform_crossover(float crossover_prob){
@@ -379,14 +390,14 @@ namespace ga {
 
     double sec;
     int num_pertubate;
-    string filename = "unweight50_c2_lsx_mp0.1_cmp_0.5.txt";
+    string filename = "random500_c2_lso_mp0.2_cmp_0.5_pop20_loooong.txt";
     sec =  getElapsedTime();
     pop_size = 20;
     crossover_method = 2; //
-    mut_prob =  0.01; 
+    mut_prob =  0.02; 
     crossover_prob = 0.5;
-    string local_search = "True";
-    converge_mut_prob = 0.5 ;
+    string local_search = "true";
+    converge_mut_prob = 0.0;
     initialize_population(pop_size);
 
     while (sec <= 177.0){   
@@ -395,27 +406,24 @@ namespace ga {
       shared_ptr<Chromosome> child;
       child = crossover(0,0.5);
       if (isConverge()) {
-      	mutation(mut_prob,child); // pertubation - mutate aggressively 
-      	int j = 0;
       	for(auto &chromosome :chromosomes_){
-      	  if (j % 2 == 0 && chromosome != chromosomes_[best_fit_i])
-      	    mutation(0.5,chromosome);
+	  mutation(0.8,chromosome);
       	}
       }
       else{
       	mutation(mut_prob, child);
       }
-      //localsearch(child);
+      localsearch(child);
       replace(child);
       ++iteration;
 
-      if (sec >= 176.0){
+      if (sec >= 177.0){
 
       	break; 
       }
     }
-    cout << "writing results:";
-    writeResults2( filename,  pop_size, crossover_method,  mut_prob,  converge_mut_prob, crossover_prob, local_search);
+    //cout << "writing results:";
+    //writeResults2( filename,  pop_size, crossover_method,  mut_prob,  converge_mut_prob, crossover_prob, local_search);
   }
 };
 
