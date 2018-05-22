@@ -56,7 +56,9 @@ namespace ga{
   class FindMaxCut {
   public:
     FindMaxCut();
-    ~FindMaxCut() {}
+    //: iteration(0){} 
+    ~FindMaxCut() { }
+
 
     void solve();//int popu_size, int crossover_method, float mut_prob,float crossover_prob, float converge_mut_prob);
     // public for now, for testing purposes
@@ -82,6 +84,8 @@ namespace ga{
     vector<int> uniform_crossover(float crossover_prob);
 
     // shared_variables
+    chrono::time_point<chrono::system_clock> start_time_;
+    int iteration;
     vector<shared_ptr<Chromosome> > chromosomes_;
     vector<Edge> edges_;
     vector<Vertex> vertices_;
@@ -90,8 +94,6 @@ namespace ga{
     int num_v_;
     int num_e_;
     int pop_size;
-    chrono::time_point<chrono::system_clock> start_time_;
-    int iteration;
     int num_pertubate;
     int best;
     int worst;

@@ -69,11 +69,7 @@ namespace ga {
 	int sum_weights = 0;
 	int num_neigh = vertices_[random[i]].neighbours.size();
 	  for(int j = 0; j < num_neigh; j++){
-	    //if (isConverge()) {
-	    //  for(auto &chromosome :chromosomes_){
-	    //	mutation(0.5,chromosome);
-	    //}
-	    //}
+
 	    int index_neigh = vertices_[random[i]].neighbours[j].first;
 	    int weight_neigh = vertices_[random[i]].neighbours[j].second;
 	    if (chromosome->genes[random[i]] == chromosome->genes[index_neigh]){
