@@ -1,4 +1,4 @@
-CXX=g++-7
+CXX=g++
 
 TARGET = maxcut
 INCLUDE_DIRS = ./
