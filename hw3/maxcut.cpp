@@ -12,24 +12,9 @@
 #include <stdlib.h>
 #include "ga.h"
 
+
 using namespace std;
 using namespace ga;
-
-// #include <fstream>
-// #include <algorithm>
-// #include <ctime>
-// #include <queue>
-// #include <stack>
-// #include <set>
-// #include <algorithm>
-
-// #include <stdlib.h>
-
-// #include "ga.h"
-
-// using namespace std;
-// using namespace ga;
-
 
 
 namespace ga {
@@ -46,7 +31,7 @@ namespace ga {
             edges_.reserve(num_e_);
 	    vertices_.reserve(num_v_);
 
-	    for (int i = 0; i < num_v_; ++i){ // for somme reason size needs to be 101 otherwise segmentationfault
+	    for (int i = 0; i < num_v_; ++i){
 	      Vertex vertex(i);
 	      vertices_.push_back(vertex);
 	    }
@@ -281,16 +266,49 @@ namespace ga {
   void FindMaxCut::localsearch(shared_ptr<Chromosome> chromosome) {
     //      int score_difference = 0;
 
-        if (iteration  % 1000 == 0)
-            random_shuffle(random_.begin(), random_.end());
+    if (iteration  % 200 == 0)
+          random_shuffle(random_.begin(), random_.end());
+
 
         bool improved = true;
+	//int iter2 = 0;
+	// queue<int> used_vq_;
+	// vector<int> used_vertices_;
+	// used_vertices_.clear();
+	// used_vertices_.reserve(num_v_);
 
+	//for (int i = 0; i < num_v_; ++i){
+	  //random_.push_back(i);
+	// used_vertices_.push_back(0);
+	//}
         while (improved) {
+	  
 	  improved = false;
-            for (int i = 0; i < num_v_; ++i) {
-                int score_difference = 0;
-                size_t max_j = vertices_[random_[i]].neighbours.size();
+	  for(int i = 0; i < num_v_; ++i) {
+
+	    // if (iteration  % 700 == 0 && iteration != 0)
+	    //   {
+	    // 	cout << used_vq_.front() << endl;;
+	    //   	vertices_[used_vq_.front()] = 0;
+	    // 	cout << used_vq_.size()<< endl;
+	    //   	used_vq_.pop();
+
+	    //   }
+	    int score_difference = 0;
+	    //size_t max_j;
+	    //int random_index = random_[i];
+	    // if (used_vertices_[random_[i]] == 1){
+	    // continue;
+	    //}
+	    size_t max_j = vertices_[random_[i]].neighbours.size();
+	    //cout << random_[i]  << "random"<< endl;
+	    //cout << used_vertices_.size() << endl;
+	    //used_vertices_[random_[i]] = 1;
+	    
+	    //used_vq_.push(random_[i]);
+	    //cout << "queue size" << used_vq_.size()<< endl;
+	    //cout << "iteration " << iteration << endl;
+
                 for (size_t j = 0; j < max_j; ++j) {
                     int neighbor_index = vertices_[random_[i]].neighbours[j].first;
                     int weight = vertices_[random_[i]].neighbours[j].second;
@@ -305,27 +323,10 @@ namespace ga {
                     chromosome->genes[random_[i]] = 1 - chromosome->genes[random_[i]];
                     improved = true;
                 }
+		
             }
-
-	    //  for (int i = 0; i < num_v_; ++i) {
-            //     int score_difference2 = 0;
-            //     size_t max_j = vertices_[random_[i]].neighbours.size();
-            //     for (size_t j = 0; j < max_j; ++j) {
-            //         int neighbor_index = vertices_[random_[i]].neighbours[j].first;
-            //         int weight = vertices_[random_[i]].neighbours[j].second;
-            //         if (chromosome->genes[random_[i]] == chromosome->genes[neighbor_index]) { // f_x(v)
-
-            //             score_difference2 += weight;
-            //         } else {
-            //             score_difference2 -= weight;
-            //         }
-            //     }
-            //     if (score_difference2 > 0) {
-            //         chromosome->genes[random_[i]] = 1 - chromosome->genes[random_[i]];
-            //         improved = true;
-            //     }
-            // }
-	    //cout << score_difference << "\n";
+	  // cout << "iter:  " << iteration << endl;
+	
 
         }
 	
@@ -406,6 +407,25 @@ namespace ga {
     }
   }
 
+  // void FindMaxCut::repairingScheme(int addset, shared_ptr<Chromosome> chromosome){
+  //   int zero = 0;
+  //   int one = 0;
+  //   for (int i, i<  num_v, ++i ){
+  //     if (chromosome[i] == 0)
+  // 	zero++;
+  //     else if (chromosome[i] == 1){
+  // 	one++; 
+  //     }
+  //   }
+  //   if(zero - one > 0)
+  //     {
+  // 	int gab = num_v_/2 - (zero - one);
+  //     }
+  //   else if (zero - one < 0){
+  //     int gab = num_v_/2 - (one - zero);
+      
+  //   }
+  // }
 
 
   shared_ptr<Chromosome> FindMaxCut::sharing(double minDist, double share_degree, shared_ptr<Chromosome> chromosome){
@@ -550,7 +570,7 @@ namespace ga {
   //   //return make_pair(1,2);
   // }
 
-      pair<int, int > FindMaxCut::selection() {
+      void FindMaxCut::selection() {
 
             double sum_of_roulette = 0.0;
             for (int i = 0; i < pop_size; ++i) {
@@ -588,7 +608,7 @@ namespace ga {
                 }
             } while (index[0] == index[1]);
 
-	    return make_pair(index[0], index[1]);
+	    parents_index =  make_pair(index[0], index[1]);
             //return make_pair(solutions_[index[0]], solutions_[index[1]]);
       //else
   //  throw "Not implemented";
@@ -629,12 +649,12 @@ namespace ga {
   }
 
   shared_ptr<Chromosome> FindMaxCut::crossover(int crossover_mode, float crossover_prob){
-    pair <int, int> indexes = selection();
+    selection();
     shared_ptr<Chromosome> child(new Chromosome(num_v_));
 
-    int i = indexes.first;
+    int i = parents_index.first;
     //cout << "parent 1 : " << i << endl;
-    int j = indexes.second;
+    int j = parents_index.second;
     //cout << "parent 2 : " << j << endl;
     vector<int> c = crossover_point(crossover_mode, crossover_prob);
     if (crossover_mode == 0 ){
@@ -660,6 +680,8 @@ namespace ga {
 	}
       }
     compute_fitness(child);
+    //worst = worst < child->fitness ? worst: child->fitness;
+    //est = best > child ? best : child->fitness;
     return child;
   }
 
@@ -723,9 +745,14 @@ namespace ga {
   void FindMaxCut::replace(shared_ptr<Chromosome>  child){
     child->index = worst_index_;
     //compute_fitness(child);
-    chromosomes_[worst_index_] = child;
+    if (child->fitness > chromosomes_[parents_index.first]->fitness)
+      chromosomes_[parents_index.first] = child;
+    else if (child->fitness > chromosomes_[parents_index.second]->fitness)
+      chromosomes_[parents_index.second] = child;
+    else
+      chromosomes_[worst_index_] = child;
     //update_fitness();
-    
+    update_fitness();
     //chromosomes_[second_worst_fit_i] = children.second; 
   }
 
@@ -760,24 +787,25 @@ namespace ga {
   void FindMaxCut::solve(string filestring){
     random_.clear();
     random_.reserve(num_v_);
-    for (int i = 0; i < num_v_; ++i)
-      random_.push_back(i);
-    string filename = filestring + "_no_reorder_localsearch_crossover2_pop100.txt";
+    
+    for (int i = 0; i < num_v_; ++i){
+	  random_.push_back(i);
+	  //used_vertices_.push_back(0);
+	}
+    string filename = filestring + "final_no_reorder.txt";
     sec =  getElapsedTime();
-    pop_size = 50;
+    pop_size = 400;
     crossover_method = 2; //
     mut_prob =  0.015;
-    reordering_method = 0;
+    reordering_method = 1;
     crossover_prob = 0.5;
     string local_search = "true";
-    //reordering(reordering_method);
+    //lsreordering(reordering_method);
     initialize_population(pop_size);
     int num_restart = 0;
-    while (sec <= 490.0){   
-      sec =  getElapsedTime();
-      update_fitness();
-      shared_ptr<Chromosome> child;
-     
+    while (getElapsedTime() <= 499.0){   
+      
+      shared_ptr<Chromosome> child;  
       if (isConverge() && num_restart == 5 ) {
       	for(auto &chromosome :chromosomes_){
       	  if (chromosome != best_solution_){
@@ -807,12 +835,13 @@ namespace ga {
       replace(child);
       ++iteration;
 
-      if (sec >= 490.0){
-      	break; 
-      }
+      //if (sec >= 499.0){
+      //	break; 
+      //}
     }
     cout << "writing results:";
     writeResults2( filename,  pop_size, crossover_method,  mut_prob,  converge_mut_prob, crossover_prob, local_search);
+    cout << "Total time taken" << getElapsedTime() << endl;
   }
 };
 
